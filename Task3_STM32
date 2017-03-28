@@ -1,0 +1,114 @@
+#include "stm32f4xx.h"
+#include "lab3_test.h"
+uint8_t start = 0;
+uint8_t btn_check = 0;
+uint16_t i = 0;
+uint32_t proverka = 0;
+	uint16_t adres = 0;
+	uint16_t adres1 = 0;
+uint32_t while_Test(void);
+	
+int main(void)
+{
+	
+	
+GPIO_InitTypeDef PORT_init_struct;
+		
+	GPIO_InitTypeDef PORT_init_Button;
+RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+  PORT_init_struct.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+  PORT_init_struct.GPIO_Mode = GPIO_Mode_OUT;
+  PORT_init_struct.GPIO_Speed = GPIO_Speed_2MHz;
+  PORT_init_struct.GPIO_OType = GPIO_OType_PP;
+  PORT_init_struct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	
+	  GPIO_Init(GPIOD, &PORT_init_struct);
+	
+
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+	PORT_init_Button.GPIO_Pin = GPIO_Pin_0;
+  PORT_init_Button.GPIO_Mode = GPIO_Mode_IN;
+  PORT_init_Button.GPIO_Speed = GPIO_Speed_2MHz;
+  PORT_init_Button.GPIO_OType = GPIO_OType_PP;
+  PORT_init_Button.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	
+	GPIO_Init(GPIOA, &PORT_init_Button);
+	
+	
+		
+while(1){
+	proverka = while_Test();
+	Lab3_Test_ini(5);
+
+switch(btn_check)
+{
+	case 0x00:
+		adres = 0x8000;
+	
+	break;
+	
+	case 0x01:
+		adres = 0x8000;
+	
+	break;
+	case 0x02:
+	adres = 0x1000;
+	adres1 = 0xFFFF;
+	break;
+	case 0x03:
+		adres = 0x8000;
+	adres1 = 0xFFFF;
+	break;
+	case 0x04:
+		adres = 0x2000;
+	adres1 = 0xFFFF;
+	break;
+	case 0x05:
+		adres = 0x4000;
+	adres1 = 0xFFFF;
+	break;
+	case 0x06:
+		adres = 0x2000;
+	adres1 = 0xFFFF;
+	break;
+	case 0x07:
+		adres = 0x8000;
+	adres1 = 0xFFFF;
+	break;
+	default:
+		adres = 0x1000;
+	adres1 = 0xFFFF;
+	break;
+}
+	
+	
+	if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) == 1)
+	{
+		if ((start != GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0)) )
+		{
+		
+		//GPIO_ResetBits(GPIOD, adres1);
+			for (i = 0; i < 150; i++)
+			{}
+					
+				if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) == 1)
+				{
+				GPIO_ResetBits(GPIOD, adres1);
+				GPIO_SetBits(GPIOD, adres);
+					btn_check ++;
+				
+				}
+				
+		}
+		
+	
+	}
+	
+	
+	start = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0);
+	
+
+	
+}
+
+}
